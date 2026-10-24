@@ -26,4 +26,13 @@
 | 18 | Cloud Hopper | https://esaterenutas11-cmyk.github.io/rekor-arcade/games/cloud.html |
 | 19 | Last Lantern | https://esaterenutas11-cmyk.github.io/rekor-arcade/games/lantern.html |
 
+## Özellikler
+- Her oyunda menü, duraklatma, game over ve rekor kaydı
+- Seviye arttıkça hızlanan oyun ve gerilim müziği
+- Game over ekranında 1 kez **reklam izle, kaldığın yerden devam et**
+- iOS ve Android uyumlu, kurulum yok
+
+## Gerçek reklam bağlamak
+Oyunlar `window.ARC_SHOW_AD(callback)` fonksiyonunu arar. Bu fonksiyonu tanımlayıp reklam SDK'sını (AdSense H5 / AdMob) çağırın; reklam bitince `callback(true)`, iptal edilirse `callback(false)` çağırın. Tanımlı değilse 5 saniyelik demo reklam gösterilir.
+
 Telefonda "Ana Ekrana Ekle" ile uygulama gibi tam ekran açılır.
