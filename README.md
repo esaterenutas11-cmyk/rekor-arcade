@@ -1,6 +1,6 @@
 # Rekor Arcade
 
-19 mobil uyumlu (iOS + Android) rekor tabanlı mini oyun. Kurulum yok, tarayıcıda çalışır.
+29 mobil uyumlu (iOS + Android) rekor tabanlı mini oyun. Kurulum yok, tarayıcıda çalışır.
 
 **Hepsi bir arada:** https://esaterenutas11-cmyk.github.io/rekor-arcade/
 
@@ -25,14 +25,25 @@
 | 17 | Robo Janitor | https://esaterenutas11-cmyk.github.io/rekor-arcade/games/robo.html |
 | 18 | Cloud Hopper | https://esaterenutas11-cmyk.github.io/rekor-arcade/games/cloud.html |
 | 19 | Last Lantern | https://esaterenutas11-cmyk.github.io/rekor-arcade/games/lantern.html |
+| 20 | Arrow Master | https://esaterenutas11-cmyk.github.io/rekor-arcade/games/arrow.html |
+| 21 | Balance Master | https://esaterenutas11-cmyk.github.io/rekor-arcade/games/balance.html |
+| 22 | Hoop Shot | https://esaterenutas11-cmyk.github.io/rekor-arcade/games/hoop.html |
+| 23 | Knife Hit | https://esaterenutas11-cmyk.github.io/rekor-arcade/games/knife.html |
+| 24 | Color Switch | https://esaterenutas11-cmyk.github.io/rekor-arcade/games/color.html |
+| 25 | Snake Rush | https://esaterenutas11-cmyk.github.io/rekor-arcade/games/snake.html |
+| 26 | Whack-a-Mole | https://esaterenutas11-cmyk.github.io/rekor-arcade/games/mole.html |
+| 27 | Flappy Wings | https://esaterenutas11-cmyk.github.io/rekor-arcade/games/flappy.html |
+| 28 | Brick Breaker | https://esaterenutas11-cmyk.github.io/rekor-arcade/games/brick.html |
+| 29 | Meteor Dodge | https://esaterenutas11-cmyk.github.io/rekor-arcade/games/meteor.html |
 
 ## Özellikler
 - Her oyunda menü, duraklatma, game over ve rekor kaydı
 - Seviye arttıkça hızlanan oyun ve gerilim müziği
 - Game over ekranında 1 kez **reklam izle, kaldığın yerden devam et**
+- Oyunlar arasında başka bir oyunu tanıtan geçiş reklamı (3 sn sonra geçilebilir)
 - iOS ve Android uyumlu, kurulum yok
 
 ## Gerçek reklam bağlamak
-Oyunlar `window.ARC_SHOW_AD(callback)` fonksiyonunu arar. Bu fonksiyonu tanımlayıp reklam SDK'sını (AdSense H5 / AdMob) çağırın; reklam bitince `callback(true)`, iptal edilirse `callback(false)` çağırın. Tanımlı değilse 5 saniyelik demo reklam gösterilir.
+Ödüllü reklam için `window.ARC_SHOW_AD(callback)` tanımlayın: reklam bitince `callback(true)`, iptal edilirse `callback(false)`. Geçiş reklamı için `window.ARC_SHOW_INTERSTITIAL(callback)` tanımlayın; reklam kapanınca `callback()` çağırın. Tanımlı değilse demo reklam gösterilir.
 
 Telefonda "Ana Ekrana Ekle" ile uygulama gibi tam ekran açılır.
