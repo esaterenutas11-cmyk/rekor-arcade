@@ -278,7 +278,7 @@ down(g,x){g.s.sw=false},
 move(g,x,y){const s=g.s;if(!g.ptr.down||s.sw)return;const dx=x-g.ptr.sx;if(Math.abs(dx)>28){s.sw=true;this.lane(g,dx>0?1:-1)}},
 up(g,x){const s=g.s;if(!s.sw)this.lane(g,x<W/2?-1:1);s.sw=false},
 key(g,k){if(k==='ArrowLeft'||k==='a')this.lane(g,-1);else if(k==='ArrowRight'||k==='d')this.lane(g,1)},
-update(g,dt){const s=g.s;s.v=Math.min(760,300+s.dist/90);g.tier(1+Math.floor(s.dist/6000));const v=s.v*(s.nitro>0?1.4:1),dy=v*dt;s.dist+=dy;s.off=(s.off+dy)%80;s.x+=(LN[s.l]-s.x)*Math.min(1,dt*12);s.tilt*=Math.pow(.02,dt);s.nitro=Math.max(0,s.nitro-dt);
+update(g,dt){const s=g.s;s.v=Math.min(640,280+s.dist/150);g.tier(1+Math.floor(s.dist/6000));const v=s.v*(s.nitro>0?1.4:1),dy=v*dt;s.dist+=dy;s.off=(s.off+dy)%80;s.x+=(LN[s.l]-s.x)*Math.min(1,dt*12);s.tilt*=Math.pow(.02,dt);s.nitro=Math.max(0,s.nitro-dt);
   s.next-=dy;if(s.next<=0){s.next=Math.max(R(380,500),s.v*.78);const n=Math.random()<.3+Math.min(.35,s.dist/40000)?2:1,F=s.freeSet||[0,1,2],cand=[0,1,2].filter(l=>F.every(f=>Math.abs(l-f)<=1)),fr=pick(cand.length?cand:[1]);let ls;if(n===2){ls=[0,1,2].filter(l=>l!==fr);ls.push(fr);s.freeSet=[fr]}else{const opts=[0,1,2].filter(l=>l!==fr),bl=pick(opts);ls=[bl,fr,opts.find(l=>l!==bl)];s.freeSet=[0,1,2].filter(l=>l!==bl)}
     for(let i=0;i<n;i++){const truck=Math.random()<.18;s.cars.push({l:ls[i],x:LN[ls[i]],y:-100,col:truck?'#6c757d':pick(CARC),sp:.5,len:truck&&n===1?118:76,chg:s.dist>9000&&n===1&&Math.random()<.35?R(.6,1.4):0,fr,passed:false})}
     if(Math.random()<.5){const fl=ls[2];for(let i=0;i<3;i++)s.cs.push({l:fl,y:-60-i*42})}else if(Math.random()<.1)s.nit.push({l:ls[2],y:-60})}
@@ -411,7 +411,7 @@ function closeGame(){musStop();if(MODE==='game'){location.href='../index.html';r
 
 function pt(e){const r=cv.getBoundingClientRect();return[(e.clientX-r.left)/r.width*W,(e.clientY-r.top)/r.height*H]}
 let pid=null;
-cv.addEventListener('pointerdown',e=>{if(phase==='ready')go();if(phase!=='play')return;e.preventDefault();if(pid!==null&&G.ptr.down)return;pid=e.pointerId;try{cv.setPointerCapture(e.pointerId)}catch(_){}const[x,y]=pt(e);const p=G.ptr;p.x=x;p.y=y;p.sx=x;p.sy=y;p.down=true;if(!G.dead&&cur.down)cur.down(G,x,y)});
+cv.addEventListener('pointerdown',e=>{if(phase==='ready'){e.preventDefault();go();return}if(phase!=='play')return;e.preventDefault();if(pid!==null&&G.ptr.down)return;pid=e.pointerId;try{cv.setPointerCapture(e.pointerId)}catch(_){}const[x,y]=pt(e);const p=G.ptr;p.x=x;p.y=y;p.sx=x;p.sy=y;p.down=true;if(!G.dead&&cur.down)cur.down(G,x,y)});
 cv.addEventListener('pointermove',e=>{if(phase!=='play'||e.pointerId!==pid)return;const[x,y]=pt(e),p=G.ptr;if(p.down){p.dx+=x-p.x;p.dy+=y-p.y}p.x=x;p.y=y;if(cur.joy&&p.down){const jx=x-p.sx,jy=y-p.sy,d=Math.hypot(jx,jy);if(d>55){p.sx+=jx/d*(d-55);p.sy+=jy/d*(d-55)}}if(!G.dead&&cur.move)cur.move(G,x,y)});
 const pup=e=>{if(e.pointerId!==pid)return;pid=null;if(phase!=='play'||!G.ptr.down){if(G)G.ptr.down=false;return}const[x,y]=pt(e);G.ptr.down=false;if(!G.dead&&cur.up)cur.up(G,x,y)};
 cv.addEventListener('pointerup',pup);cv.addEventListener('pointercancel',pup);
@@ -420,7 +420,7 @@ const held={};
 function keyPos(k){if(k===' '||k==='ArrowUp'||k==='Enter'||k==='w'||k==='ArrowDown')return[W/2,H*.6];if(k==='ArrowLeft'||k==='a')return[40,H*.6];if(k==='ArrowRight'||k==='d')return[W-40,H*.6];return null}
 window.addEventListener('keydown',e=>{if(!cur)return;const k=e.key;
   if(k==='Escape'||k==='p'||k==='P'){if(phase==='play')showPause();else if(phase==='pause'){phase='play';ov.hidden=true;musPlay(cur.id)}e.preventDefault();return}
-  if(phase==='ready'&&['ArrowLeft','ArrowRight','ArrowUp','ArrowDown',' ','Enter','a','d','w','s'].includes(k))go();
+  if(phase==='ready'&&['ArrowLeft','ArrowRight','ArrowUp','ArrowDown',' ','Enter','a','d','w','s'].includes(k)){go();e.preventDefault();return}
   if(phase!=='play'||G.dead)return;if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown',' '].includes(k))e.preventDefault();
   if(k==='ArrowLeft'||k==='a')G.ax=-1;if(k==='ArrowRight'||k==='d')G.ax=1;if(k==='ArrowUp'||k==='w')G.ay=-1;if(k==='ArrowDown'||k==='s')G.ay=1;
   if(e.repeat)return;if(cur.key){cur.key(G,k);return}if(cur.steer||cur.joy)return;const p=keyPos(k);if(p&&cur.down){held[k]=p;G.ptr.sx=p[0];G.ptr.sy=p[1];cur.down(G,p[0],p[1])}});

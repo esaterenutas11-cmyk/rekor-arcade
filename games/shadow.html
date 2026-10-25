@@ -267,7 +267,7 @@ def({id:'shadow',name:'Shadow Switch',desc:'Işık ve gölge dünyaları arasın
 init(g){const s=g.s={sd:-1,y:-1,v:290,dist:0,ob:[],orbs:[],next:300,ok:0,grid:0,run:0};if(g.demo){s.ob.push({x:200,sd:-1,h:50,w:26,ph:0,mv:0},{x:300,sd:1,h:60,w:26,ph:0,mv:0});s.orbs.push({x:250,sd:1})}},
 down(g){const s=g.s;s.sd=-s.sd;g.sfx('flip')},
 oh(o,t){return o.mv?o.h*(.55+.45*Math.sin(t*4+o.ph)):o.h},
-update(g,dt){const s=g.s;s.v=Math.min(620,290+s.dist/40);g.tier(1+Math.floor(s.dist/3000));const dx=s.v*dt;s.dist+=dx;s.grid=(s.grid+dx)%40;s.run+=dt*s.v/22;s.y+=(s.sd-s.y)*Math.min(1,dt*18);
+update(g,dt){const s=g.s;s.v=Math.min(500,270+s.dist/90);g.tier(1+Math.floor(s.dist/3000));const dx=s.v*dt;s.dist+=dx;s.grid=(s.grid+dx)%40;s.run+=dt*s.v/22;s.y+=(s.sd-s.y)*Math.min(1,dt*18);
   s.next-=dx;if(s.next<=0){s.next=R(150,240)*Math.min(1.25,s.v/290);const sd=pick([-1,1]),mv=s.dist>5000&&Math.random()<.3?1:0;s.ob.push({x:W+30,sd,h:R(30,72),w:26,ph:R(0,6),mv});if(s.dist>1200&&Math.random()<.18+Math.min(.25,s.dist/20000)){const o2=R(110,150)*Math.max(1,s.v/400);s.ob.push({x:W+30+o2,sd:-sd,h:R(28,60),w:26,ph:0,mv:0});s.next+=o2}if(Math.random()<.5)s.orbs.push({x:W+30+R(50,80),sd:-sd})}
   for(const o of s.ob)o.x-=dx;for(const o of s.orbs)o.x-=dx;s.ob=s.ob.filter(o=>o.x>-40);s.orbs=s.orbs.filter(o=>o.x>-20);
   if(Math.abs(s.y)>.5){const side=Math.sign(s.y);for(const o of s.ob)if(o.sd===side&&Math.abs(o.x-90)<o.w/2+9&&this.oh(o,g.t)>14){g.sfx('hit');g.buzz(120);g.burst(90,MID+side*20,o.sd<0?'#00f0ff':'#ff3df2',24,240);g.shake();g.end();return}
@@ -398,7 +398,7 @@ function closeGame(){musStop();if(MODE==='game'){location.href='../index.html';r
 
 function pt(e){const r=cv.getBoundingClientRect();return[(e.clientX-r.left)/r.width*W,(e.clientY-r.top)/r.height*H]}
 let pid=null;
-cv.addEventListener('pointerdown',e=>{if(phase==='ready')go();if(phase!=='play')return;e.preventDefault();if(pid!==null&&G.ptr.down)return;pid=e.pointerId;try{cv.setPointerCapture(e.pointerId)}catch(_){}const[x,y]=pt(e);const p=G.ptr;p.x=x;p.y=y;p.sx=x;p.sy=y;p.down=true;if(!G.dead&&cur.down)cur.down(G,x,y)});
+cv.addEventListener('pointerdown',e=>{if(phase==='ready'){e.preventDefault();go();return}if(phase!=='play')return;e.preventDefault();if(pid!==null&&G.ptr.down)return;pid=e.pointerId;try{cv.setPointerCapture(e.pointerId)}catch(_){}const[x,y]=pt(e);const p=G.ptr;p.x=x;p.y=y;p.sx=x;p.sy=y;p.down=true;if(!G.dead&&cur.down)cur.down(G,x,y)});
 cv.addEventListener('pointermove',e=>{if(phase!=='play'||e.pointerId!==pid)return;const[x,y]=pt(e),p=G.ptr;if(p.down){p.dx+=x-p.x;p.dy+=y-p.y}p.x=x;p.y=y;if(cur.joy&&p.down){const jx=x-p.sx,jy=y-p.sy,d=Math.hypot(jx,jy);if(d>55){p.sx+=jx/d*(d-55);p.sy+=jy/d*(d-55)}}if(!G.dead&&cur.move)cur.move(G,x,y)});
 const pup=e=>{if(e.pointerId!==pid)return;pid=null;if(phase!=='play'||!G.ptr.down){if(G)G.ptr.down=false;return}const[x,y]=pt(e);G.ptr.down=false;if(!G.dead&&cur.up)cur.up(G,x,y)};
 cv.addEventListener('pointerup',pup);cv.addEventListener('pointercancel',pup);
@@ -407,7 +407,7 @@ const held={};
 function keyPos(k){if(k===' '||k==='ArrowUp'||k==='Enter'||k==='w'||k==='ArrowDown')return[W/2,H*.6];if(k==='ArrowLeft'||k==='a')return[40,H*.6];if(k==='ArrowRight'||k==='d')return[W-40,H*.6];return null}
 window.addEventListener('keydown',e=>{if(!cur)return;const k=e.key;
   if(k==='Escape'||k==='p'||k==='P'){if(phase==='play')showPause();else if(phase==='pause'){phase='play';ov.hidden=true;musPlay(cur.id)}e.preventDefault();return}
-  if(phase==='ready'&&['ArrowLeft','ArrowRight','ArrowUp','ArrowDown',' ','Enter','a','d','w','s'].includes(k))go();
+  if(phase==='ready'&&['ArrowLeft','ArrowRight','ArrowUp','ArrowDown',' ','Enter','a','d','w','s'].includes(k)){go();e.preventDefault();return}
   if(phase!=='play'||G.dead)return;if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown',' '].includes(k))e.preventDefault();
   if(k==='ArrowLeft'||k==='a')G.ax=-1;if(k==='ArrowRight'||k==='d')G.ax=1;if(k==='ArrowUp'||k==='w')G.ay=-1;if(k==='ArrowDown'||k==='s')G.ay=1;
   if(e.repeat)return;if(cur.key){cur.key(G,k);return}if(cur.steer||cur.joy)return;const p=keyPos(k);if(p&&cur.down){held[k]=p;G.ptr.sx=p[0];G.ptr.sy=p[1];cur.down(G,p[0],p[1])}});

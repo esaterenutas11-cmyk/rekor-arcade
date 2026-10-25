@@ -270,7 +270,7 @@ function lanternKid(c,x,y,t,wob){c.save();c.translate(x,y);shadow(c,0,14,14,5,.4
 def({id:'lantern',name:'Last Lantern',desc:'Fenerini yakıtla besle, karanlıkta ağaçlardan ve hayaletlerden kaç. Işık azaldıkça çarpan artar!',ctrl:'Parmağını sağa sola kaydır',th:['#f4a23c','#2a3a5a','#ffd27a','#1a0e00'],steer:true,
 init(g){const s=g.s={x:180,fuel:100,v:100,dist:0,acc:0,bonus:0,ob:[],oil:[],gh:[],next:80,onext:260,gnext:900,ff:[],gr:[]};for(let i=0;i<40;i++)s.gr.push({x:R(0,W),y:R(0,H)});for(let i=0;i<10;i++)s.ff.push({x:R(0,W),y:R(80,H),p:R(0,6)});
   if(g.demo){for(let i=0;i<4;i++)s.ob.push({x:R(40,320),y:R(150,420),r:R(16,24),t:'tree'});s.oil.push({x:240,y:380});s.fuel=70}},
-update(g,dt){const s=g.s;s.v=Math.min(230,100+s.dist/55);g.tier(1+Math.floor(s.dist/2500));const dy=s.v*dt;s.dist+=dy;
+update(g,dt){const s=g.s;s.v=Math.min(210,95+s.dist/70);g.tier(1+Math.floor(s.dist/2500));const dy=s.v*dt;s.dist+=dy;
   if(g.ptr.down)s.x+=g.ptr.dx*1.3;s.x=CL(s.x+g.ax*240*dt,30,330);
   s.fuel-=dt*(6+Math.min(7,s.dist/1400));const m=s.fuel<30?3:s.fuel<60?2:1;s.acc+=dy/20*m;
   s.next-=dy;if(s.next<=0){s.next=R(70,130)*(1-Math.min(.42,s.dist/8000));const no={x:R(30,330),y:-40,r:R(16,26),t:Math.random()<.7?'tree':'rock'};if(this.passable(s,no))s.ob.push(no)}
@@ -408,7 +408,7 @@ function closeGame(){musStop();if(MODE==='game'){location.href='../index.html';r
 
 function pt(e){const r=cv.getBoundingClientRect();return[(e.clientX-r.left)/r.width*W,(e.clientY-r.top)/r.height*H]}
 let pid=null;
-cv.addEventListener('pointerdown',e=>{if(phase==='ready')go();if(phase!=='play')return;e.preventDefault();if(pid!==null&&G.ptr.down)return;pid=e.pointerId;try{cv.setPointerCapture(e.pointerId)}catch(_){}const[x,y]=pt(e);const p=G.ptr;p.x=x;p.y=y;p.sx=x;p.sy=y;p.down=true;if(!G.dead&&cur.down)cur.down(G,x,y)});
+cv.addEventListener('pointerdown',e=>{if(phase==='ready'){e.preventDefault();go();return}if(phase!=='play')return;e.preventDefault();if(pid!==null&&G.ptr.down)return;pid=e.pointerId;try{cv.setPointerCapture(e.pointerId)}catch(_){}const[x,y]=pt(e);const p=G.ptr;p.x=x;p.y=y;p.sx=x;p.sy=y;p.down=true;if(!G.dead&&cur.down)cur.down(G,x,y)});
 cv.addEventListener('pointermove',e=>{if(phase!=='play'||e.pointerId!==pid)return;const[x,y]=pt(e),p=G.ptr;if(p.down){p.dx+=x-p.x;p.dy+=y-p.y}p.x=x;p.y=y;if(cur.joy&&p.down){const jx=x-p.sx,jy=y-p.sy,d=Math.hypot(jx,jy);if(d>55){p.sx+=jx/d*(d-55);p.sy+=jy/d*(d-55)}}if(!G.dead&&cur.move)cur.move(G,x,y)});
 const pup=e=>{if(e.pointerId!==pid)return;pid=null;if(phase!=='play'||!G.ptr.down){if(G)G.ptr.down=false;return}const[x,y]=pt(e);G.ptr.down=false;if(!G.dead&&cur.up)cur.up(G,x,y)};
 cv.addEventListener('pointerup',pup);cv.addEventListener('pointercancel',pup);
@@ -417,7 +417,7 @@ const held={};
 function keyPos(k){if(k===' '||k==='ArrowUp'||k==='Enter'||k==='w'||k==='ArrowDown')return[W/2,H*.6];if(k==='ArrowLeft'||k==='a')return[40,H*.6];if(k==='ArrowRight'||k==='d')return[W-40,H*.6];return null}
 window.addEventListener('keydown',e=>{if(!cur)return;const k=e.key;
   if(k==='Escape'||k==='p'||k==='P'){if(phase==='play')showPause();else if(phase==='pause'){phase='play';ov.hidden=true;musPlay(cur.id)}e.preventDefault();return}
-  if(phase==='ready'&&['ArrowLeft','ArrowRight','ArrowUp','ArrowDown',' ','Enter','a','d','w','s'].includes(k))go();
+  if(phase==='ready'&&['ArrowLeft','ArrowRight','ArrowUp','ArrowDown',' ','Enter','a','d','w','s'].includes(k)){go();e.preventDefault();return}
   if(phase!=='play'||G.dead)return;if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown',' '].includes(k))e.preventDefault();
   if(k==='ArrowLeft'||k==='a')G.ax=-1;if(k==='ArrowRight'||k==='d')G.ax=1;if(k==='ArrowUp'||k==='w')G.ay=-1;if(k==='ArrowDown'||k==='s')G.ay=1;
   if(e.repeat)return;if(cur.key){cur.key(G,k);return}if(cur.steer||cur.joy)return;const p=keyPos(k);if(p&&cur.down){held[k]=p;G.ptr.sx=p[0];G.ptr.sy=p[1];cur.down(G,p[0],p[1])}});
