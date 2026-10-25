@@ -1,6 +1,6 @@
 # Rekor Arcade
 
-29 mobil uyumlu (iOS + Android) rekor tabanlı mini oyun. Kurulum yok, tarayıcıda çalışır.
+34 mobil uyumlu (iOS + Android) rekor tabanlı mini oyun. Kurulum yok, tarayıcıda çalışır.
 
 **Hepsi bir arada:** https://esaterenutas11-cmyk.github.io/rekor-arcade/
 
@@ -35,6 +35,11 @@
 | 27 | Flappy Wings | https://esaterenutas11-cmyk.github.io/rekor-arcade/games/flappy.html |
 | 28 | Brick Breaker | https://esaterenutas11-cmyk.github.io/rekor-arcade/games/brick.html |
 | 29 | Meteor Dodge | https://esaterenutas11-cmyk.github.io/rekor-arcade/games/meteor.html |
+| 30 | Bottle Shooter | https://esaterenutas11-cmyk.github.io/rekor-arcade/games/shoot.html |
+| 31 | Balloon Pop | https://esaterenutas11-cmyk.github.io/rekor-arcade/games/balloon.html |
+| 32 | Can Knockdown | https://esaterenutas11-cmyk.github.io/rekor-arcade/games/cans.html |
+| 33 | Ring Toss | https://esaterenutas11-cmyk.github.io/rekor-arcade/games/ring.html |
+| 34 | Hammer Strike | https://esaterenutas11-cmyk.github.io/rekor-arcade/games/hammer.html |
 
 ## Özellikler
 - Her oyunda menü, duraklatma, game over ve rekor kaydı
