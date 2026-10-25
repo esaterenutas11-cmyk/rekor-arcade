@@ -75,6 +75,7 @@ body.playing{overflow:hidden}
 .btn.red{background:linear-gradient(#ff7a8a,#e0314a);box-shadow:0 calc(var(--u)*5) 0 #8a1a2a,inset 0 calc(var(--u)*2) 0 rgba(255,255,255,.45)}
 .btn.purple{background:linear-gradient(#b48cff,#7a3fe0);box-shadow:0 calc(var(--u)*5) 0 #45208a,inset 0 calc(var(--u)*2) 0 rgba(255,255,255,.45)}
 .btn.gold{background:linear-gradient(#ffe36b,#f2a900);color:#4a2400;text-shadow:0 calc(var(--u)*1) 0 rgba(255,255,255,.5);box-shadow:0 calc(var(--u)*5) 0 #8a5a00,inset 0 calc(var(--u)*2) 0 rgba(255,255,255,.6);font-size:calc(var(--u)*17)}
+.btn.pulse{animation:pulse 1.1s ease-in-out infinite}
 .btn:disabled{filter:grayscale(.8) brightness(.8);cursor:default}
 .adbox{width:100%;border-radius:calc(var(--u)*16);background:linear-gradient(160deg,var(--a),var(--b));padding:calc(var(--u)*16) calc(var(--u)*12);display:flex;flex-direction:column;gap:calc(var(--u)*8);align-items:center;box-shadow:inset 0 0 0 calc(var(--u)*2) rgba(255,255,255,.25)}
 .adbox p{margin:0;font-weight:800;font-size:calc(var(--u)*13);text-shadow:0 1px 2px rgba(0,0,0,.6)}
@@ -1304,7 +1305,7 @@ document.addEventListener('touchmove',e=>{if(phase!=='hub')e.preventDefault()},{
 document.addEventListener('gesturestart',e=>e.preventDefault());
 document.addEventListener('dblclick',e=>{if(phase!=='hub')e.preventDefault()});
 
-function mkG(demo){return{t:0,score:0,info:'',demo,dead:false,ptr:{x:W/2,y:H/2,sx:W/2,sy:H/2,dx:0,dy:0,down:false},ax:0,ay:0,parts:[],pops:[],shk:0,s:null,tn:1,banner:null,flA:0,flC:'#fff',rings:[],danger:false,inv:0,revived:false,
+function mkG(demo){return{t:0,score:0,info:'',demo,dead:false,ptr:{x:W/2,y:H/2,sx:W/2,sy:H/2,dx:0,dy:0,down:false},ax:0,ay:0,parts:[],pops:[],shk:0,s:null,tn:1,banner:null,flA:0,flC:'#fff',rings:[],danger:false,inv:0,revived:false,rv:0,
   flash(col,a=.45){if(!this.demo){this.flC=col;this.flA=a}},ring(x,y,col,r=70){if(!this.demo)this.rings.push({x,y,col,r,life:.45,max:.45})},
   add(n){this.score+=n},end(){if(this.dead||this.inv>0)return;this.dead=true;if(!this.demo){buzz(140);this.flash('#ff2a4a',.4);musStop(.6);setTimeout(gameOver,550)}},
   sfx(n){if(!this.demo)sfx(n)},buzz(ms){if(!this.demo)buzz(ms)},shake(t=.3){if(!this.demo)this.shk=t},
@@ -1357,27 +1358,27 @@ function showMenu(){phase='menu';ov.hidden=false;ov.className='clear';
 function showSet(){phase='menu';rstArm=false;ov.className='';ov.innerHTML='<div class="pn" style="'+styleVars()+'"><h2 data-t="SETTINGS">SETTINGS</h2><button class="btn blue" data-a="snd">SES: '+(sound?'AÇIK':'KAPALI')+'</button><button class="btn blue" data-a="mus">MÜZİK: '+(MUS.on?'AÇIK':'KAPALI')+'</button><button class="btn blue" data-a="vib">TİTREŞİM: '+(vibe?'AÇIK':'KAPALI')+'</button><button class="btn purple" data-a="rst">REKORU SIFIRLA</button><p class="hint">Bu oyunun rekoru: '+getHS(cur.id)+'</p><button class="btn" data-a="back">GERİ</button></div>'}
 function showPause(){phase='pause';musStop(.25);ov.hidden=false;ov.className='';ov.innerHTML='<div class="pn" style="'+styleVars()+'"><h2 data-t="PAUSED">PAUSED</h2><button class="btn" data-a="resume">RESUME</button><button class="btn blue" data-a="restart">RESTART</button><button class="btn purple" data-a="main">MAIN MENU</button></div>';ov.querySelector('[data-a=resume]').focus({preventScroll:true})}
 function gameOver(){if(phase!=='play'||!G.dead)return;phase='over';const hs=getHS(cur.id),rec=G.score>hs&&G.score>0;if(rec)setHS(cur.id,G.score);sfx(rec?'rec':'over');ov.hidden=false;ov.className='';
-  ov.innerHTML='<div class="pn" style="'+styleVars()+'"><h2 data-t="GAME OVER">GAME OVER</h2>'+(rec?'<div class="rec">YENİ REKOR!</div>':'')+'<div class="lbl">SCORE</div><div class="big">'+G.score+'</div><div class="lbl">HIGH SCORE</div><div class="mid">'+Math.max(hs,G.score)+'</div>'+(G.tn>1?'<p class="hint">Ulaştığın seviye: '+G.tn+'</p>':'')+(G.revived?'':'<button class="btn gold" data-a="ad">▶ REKLAM İZLE · DEVAM ET</button>')+'<button class="btn" data-a="restart">RETRY</button><button class="btn blue" data-a="main">MENU</button></div>';ov.querySelector('[data-a=restart]').focus({preventScroll:true})}
+  ov.innerHTML='<div class="pn" style="'+styleVars()+'"><h2 data-t="GAME OVER">GAME OVER</h2>'+(rec?'<div class="rec">YENİ REKOR!</div>':'')+'<div class="lbl">SCORE</div><div class="big">'+G.score+'</div><div class="lbl">HIGH SCORE</div><div class="mid">'+Math.max(hs,G.score)+'</div>'+(G.tn>1?'<p class="hint">Ulaştığın seviye: '+G.tn+'</p>':'')+(G.rv<2?'<button class="btn gold pulse" data-a="ad">♥ REKLAM İZLE · +1 CAN</button><p class="hint">Kaldığın yerden devam et · kalan hak: '+(2-G.rv)+'</p>':'')+'<button class="btn" data-a="retry">RETRY</button><button class="btn blue" data-a="gmenu">MENU</button></div>';const fb=ov.querySelector('[data-a=ad]')||ov.querySelector('[data-a=retry]');fb.focus({preventScroll:true})}
 let adTimer=null;
 function ss(k,v){try{if(v===undefined)return sessionStorage.getItem(k);sessionStorage.setItem(k,v)}catch(e){return null}}
 function allGames(){return window.ARC_ALL||GAMES.map(x=>[x.id,x.name,x.desc,x.th])}
-function interstitial(cb){if(typeof window.ARC_SHOW_INTERSTITIAL==='function'){try{window.ARC_SHOW_INTERSTITIAL(()=>cb());return}catch(e){}}
+function interstitial(cb){const next0=cb===start?'TEKRAR OYNA ▶':cb===toMenu?'MENÜYE DÖN ▶':'GEÇ ▶';if(typeof window.ARC_SHOW_INTERSTITIAL==='function'){try{window.ARC_SHOW_INTERSTITIAL(()=>cb());return}catch(e){}}
   clearInterval(adTimer);phase='ad';const list=allGames().filter(x=>x[0]!==cur.id),p=list.length?pick(list):[cur.id,'Rekor Arcade','29 farklı rekor oyunu tek yerde!',['#5b6cff','#2a1f9c','#ffd23f','#160f5a']],[a,b,lc,ls]=p[3];let n=3;
-  ov.hidden=false;ov.className='';ov.innerHTML='<div class="pn ad" style="'+styleVars()+'"><div class="lbl">REKLAM · YENİ OYUN</div><div class="adbox" style="--a:'+a+';--b:'+b+';--lc:'+lc+';--ls:'+ls+'"><span>YENİ!</span><div class="logo sm" data-t="'+p[1]+'">'+p[1]+'</div><p>'+p[2]+'</p></div><button class="btn gold" data-a="promo" data-id="'+p[0]+'">ŞİMDİ OYNA</button><button class="btn blue" data-a="skip" id="skb" disabled>GEÇ ('+n+')</button></div>';
-  window.__adcb=cb;adTimer=setInterval(()=>{n--;const bt=document.getElementById('skb');if(!bt){clearInterval(adTimer);return}if(n<=0){clearInterval(adTimer);bt.disabled=false;bt.textContent='GEÇ ▶'}else bt.textContent='GEÇ ('+n+')'},1000)}
+  ov.hidden=false;ov.className='';ov.innerHTML='<div class="pn ad" style="'+styleVars()+'"><div class="lbl">REKLAM</div><div class="adbox" style="--a:'+a+';--b:'+b+';--lc:'+lc+';--ls:'+ls+'"><span>YENİ!</span><div class="logo sm" data-t="'+p[1]+'">'+p[1]+'</div><p>'+p[2]+'</p></div><button class="btn gold" data-a="promo" data-id="'+p[0]+'">ŞİMDİ OYNA</button><button class="btn blue" data-a="skip" id="skb" disabled>GEÇ ('+n+')</button></div>';
+  window.__adcb=cb;adTimer=setInterval(()=>{n--;const bt=document.getElementById('skb');if(!bt){clearInterval(adTimer);return}if(n<=0){clearInterval(adTimer);bt.disabled=false;bt.textContent=next0||'GEÇ ▶'}else bt.textContent='GEÇ ('+n+')'},1000)}
 function goPromo(id){if(MODE==='game'){location.href=id+'.html';return}const i=GAMES.findIndex(x=>x.id===id);if(i>=0)openGame(i,true)}
-function playWithAd(){const n=+(ss('arc_n')||0)+1;ss('arc_n',n);if(n%3===0)interstitial(start);else start()}
+function afterAd(next){interstitial(next)}
 function showAd(){phase='ad';clearInterval(adTimer);if(typeof window.ARC_SHOW_AD==='function'){try{window.ARC_SHOW_AD(ok=>{if(ok)revive();else gameOverAgain()});return}catch(e){}}
   const others=GAMES.filter(x=>x!==cur),promo=others.length?pick(others):{name:'Rekor Arcade',desc:'29 farklı rekor oyunu tek yerde. Hepsini dene, rekorları topla!',th:['#5b6cff','#2a1f9c','#ffd23f','#160f5a']},[a,b,lc,ls]=promo.th;let n=5;
   ov.hidden=false;ov.className='';ov.innerHTML='<div class="pn ad" style="'+styleVars()+'"><div class="lbl">REKLAM · '+n+' SN</div><div class="adbox" style="--a:'+a+';--b:'+b+';--lc:'+lc+';--ls:'+ls+'"><div class="logo sm" data-t="'+promo.name+'">'+promo.name+'</div><p>'+promo.desc+'</p><span>Rekor Arcade\'de şimdi oyna!</span></div><div class="big" id="adc">'+n+'</div><button class="btn gold" data-a="revive" id="adb" disabled>ÖDÜLÜ AL</button><p class="hint">Reklam bitince kaldığın yerden devam edersin.</p></div>';
   adTimer=setInterval(()=>{n--;const e=document.getElementById('adc'),bt=document.getElementById('adb');if(!e){clearInterval(adTimer);return}e.textContent=Math.max(0,n);if(n<=0){clearInterval(adTimer);bt.disabled=false;bt.textContent='▶ DEVAM ET';sfx('coin')}},1000)}
 function gameOverAgain(){phase='play';G.dead=true;gameOver()}
-function revive(){clearInterval(adTimer);if(!G||G.revived)return;G.revived=true;G.dead=false;G.inv=2.2;G.parts=[];G.danger=false;try{const f=RV[cur.id];if(f)f(G,cur)}catch(e){console.error(e)}G.flash('#ffd23f',.4);phase='ready';readyT=0;ov.hidden=true;ov.innerHTML='';sfx('lvl')}
+function revive(){clearInterval(adTimer);if(!G||G.rv>=2)return;G.rv++;G.revived=true;G.dead=false;G.inv=2.2;G.parts=[];G.danger=false;try{const f=RV[cur.id];if(f)f(G,cur)}catch(e){console.error(e)}G.flash('#ffd23f',.4);phase='ready';readyT=0;ov.hidden=true;ov.innerHTML='';sfx('lvl')}
 function start(){musStop(.15);AP=[];lastSc=0;G=mkG(false);cur.init(G);phase='ready';readyT=0;ov.hidden=true;ov.innerHTML='';sfx('click')}
 function go(){if(phase==='ready'){phase='play';musPlay(cur.id)}}
 function toMenu(){musStop();G=mkG(false);cur.init(G);showMenu()}
 ov.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b)return;const a=b.dataset.a;sfx('click');
-  if(a==='play'||a==='restart')playWithAd();else if(a==='skip'){clearInterval(adTimer);const f=window.__adcb;window.__adcb=null;if(f)f()}else if(a==='promo'){clearInterval(adTimer);goPromo(b.dataset.id)}else if(a==='set')showSet();else if(a==='quit')closeGame();else if(a==='back')showMenu();
+  if(a==='play'||a==='restart')start();else if(a==='retry')afterAd(start);else if(a==='gmenu')afterAd(toMenu);else if(a==='skip'){clearInterval(adTimer);const f=window.__adcb;window.__adcb=null;if(f)f()}else if(a==='promo'){clearInterval(adTimer);goPromo(b.dataset.id)}else if(a==='set')showSet();else if(a==='quit')closeGame();else if(a==='back')showMenu();
   else if(a==='snd'){sound=!sound;try{localStorage.setItem('arc_snd',sound?'1':'0')}catch(e){}b.textContent='SES: '+(sound?'AÇIK':'KAPALI')}
   else if(a==='mus'){MUS.on=!MUS.on;try{localStorage.setItem('arc_mus',MUS.on?'1':'0')}catch(e){}b.textContent='MÜZİK: '+(MUS.on?'AÇIK':'KAPALI')}
   else if(a==='vib'){vibe=!vibe;try{localStorage.setItem('arc_vib',vibe?'1':'0')}catch(e){}b.textContent='TİTREŞİM: '+(vibe?'AÇIK':'KAPALI');buzz(40)}
@@ -1386,7 +1387,7 @@ ov.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b)retur
   else if(a==='resume'){phase='play';ov.hidden=true;musPlay(cur.id)}else if(a==='main')toMenu()});
 $('#pz').addEventListener('click',()=>{if(phase==='play')showPause();else if(phase==='pause'){phase='play';ov.hidden=true;musPlay(cur.id)}});
 
-function openGame(i,noAd){cur=GAMES[i];hub.hidden=true;play.hidden=false;document.body.classList.add('playing');play.style.setProperty('--pa',cur.th[1]);fit();toMenu();render();const last=ss('arc_last');ss('arc_last',cur.id);if(!noAd&&last&&last!==cur.id){ss('arc_n',1);interstitial(showMenu)}}
+function openGame(i,noAd){cur=GAMES[i];hub.hidden=true;play.hidden=false;document.body.classList.add('playing');play.style.setProperty('--pa',cur.th[1]);fit();toMenu();render()}
 function closeGame(){musStop();if(MODE==='game'){location.href='../index.html';return}play.hidden=true;hub.hidden=false;phase='hub';cur=null;document.body.classList.remove('playing');refreshHub()}
 
 function pt(e){const r=cv.getBoundingClientRect();return[(e.clientX-r.left)/r.width*W,(e.clientY-r.top)/r.height*H]}

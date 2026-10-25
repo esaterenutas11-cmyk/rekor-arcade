@@ -39,8 +39,9 @@
 ## Özellikler
 - Her oyunda menü, duraklatma, game over ve rekor kaydı
 - Seviye arttıkça hızlanan oyun ve gerilim müziği
-- Game over ekranında 1 kez **reklam izle, kaldığın yerden devam et**
-- Oyunlar arasında başka bir oyunu tanıtan geçiş reklamı (3 sn sonra geçilebilir)
+- Oyun başında reklam yok
+- Game over ekranında **reklam izle, +1 can** (oyun başına 2 hak, kaldığın yerden devam)
+- Yandıktan sonra RETRY/MENU seçilince geçiş reklamı (3 sn sonra geçilebilir)
 - iOS ve Android uyumlu, kurulum yok
 
 ## Gerçek reklam bağlamak
